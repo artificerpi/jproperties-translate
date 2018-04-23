@@ -2,34 +2,81 @@ package jproperties
 
 import (
 	"bufio"
+	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
 	"strings"
 )
 
+// Properties provides the way to load and store properties to file.
 type Properties struct {
 	dict        map[string]string
 	description string
 }
 
+// Load reads properties from file with specified name
 func (p *Properties) Load(filename string) {
-	p = &Properties{dict: make(map[string]string)}
 	if len(filename) == 0 {
 		log.Fatal("Invalid file name when loading properties file")
 	}
 	file, err := os.Open(filename)
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 	defer file.Close()
 
-	// p.readProps(file)
+	p, err = readProps(file)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
+// Store writes properties to file
 func (p *Properties) Store(filename, description string) {
+	if len(filename) == 0 {
+		log.Fatal("Invalid file name when storing properties file")
+	}
 
+	file, err := os.Create(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	err = writeProps(file, p)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// Get retrives value from Properties by specified key
+func (p *Properties) Get(key string) string {
+	if p == nil || p.dict == nil {
+		log.Fatal("Try to get value from null Properties")
+	}
+
+	return p.dict[key]
+}
+
+// Put save a property
+func (p *Properties) Put(key, value string) {
+	if p == nil || p.dict == nil {
+		log.Fatal("Try to save value from null Properties")
+	}
+
+	p.dict[key] = value
+}
+
+// Keys return all keys of properties
+func (p *Properties) Keys() []string {
+	keys := []string{}
+	for k := range p.dict {
+		keys = append(keys, k)
+	}
+
+	return keys
 }
 
 func readProps(reader io.Reader) (p *Properties, err error) {
@@ -56,6 +103,19 @@ func readProps(reader io.Reader) (p *Properties, err error) {
 	return p, nil
 }
 
-func (p *Properties) writeProps(writer io.Writer, description string) {
+func writeProps(writer io.Writer, p *Properties) error {
+	if p == nil || p.dict == nil {
+		return errors.New("Writing null Properties")
+	}
 
+	if len(p.description) > 0 {
+		fmt.Fprintln(writer, p.description)
+	}
+
+	for k, v := range p.dict {
+		prop := k + "=" + v
+		fmt.Fprintln(writer, prop)
+	}
+
+	return nil
 }
