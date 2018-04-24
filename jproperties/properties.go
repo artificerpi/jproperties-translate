@@ -27,10 +27,13 @@ func (p *Properties) Load(filename string) {
 	}
 	defer file.Close()
 
-	p, err = readProps(file)
+	props, err := readProps(file)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	p.dict = props.dict
+	p.description = props.description
 }
 
 // Store writes properties to file
@@ -62,10 +65,13 @@ func (p *Properties) Get(key string) string {
 
 // Put save a property
 func (p *Properties) Put(key, value string) {
-	if p == nil || p.dict == nil {
+	if p == nil {
 		log.Fatal("Try to save value from null Properties")
 	}
 
+	if p.dict == nil {
+		p.dict = make(map[string]string)
+	}
 	p.dict[key] = value
 }
 
@@ -104,7 +110,7 @@ func readProps(reader io.Reader) (p *Properties, err error) {
 }
 
 func writeProps(writer io.Writer, p *Properties) error {
-	if p == nil || p.dict == nil {
+	if p == nil {
 		return errors.New("Writing null Properties")
 	}
 

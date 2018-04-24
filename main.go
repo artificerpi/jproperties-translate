@@ -20,7 +20,8 @@ func main() {
 	flag.StringVar(&lang, "lang", "zh-CN", "specify the language you want")
 	flag.Parse()
 
-	var srcProps, dstProps jproperties.Properties
+	var srcProps jproperties.Properties
+	dstProps := jproperties.Properties{}
 	srcProps.Load(srcFile)
 	for _, name := range srcProps.Keys() {
 		log.Println("Translating prop:", name, srcProps.Get(name))
