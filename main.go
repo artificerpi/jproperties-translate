@@ -6,6 +6,7 @@ import (
 
 	"github.com/artificerpi/gotranslate"
 	"github.com/artificerpi/jproperties-translate/jproperties"
+	"golang.org/x/text/language"
 )
 
 var (
@@ -20,12 +21,16 @@ func main() {
 	flag.StringVar(&lang, "lang", "zh-CN", "specify the language you want")
 	flag.Parse()
 
+	langTag, err := language.Parse(lang)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	var srcProps jproperties.Properties
 	dstProps := jproperties.Properties{}
 	srcProps.Load(srcFile)
 	for _, name := range srcProps.Keys() {
-		log.Println("Translating prop:", name, srcProps.Get(name))
-		translated := gotranslate.QuickTranslation(srcProps.Get(name), gotranslate.English, gotranslate.ChineseS)
+		translated := gotranslate.QuickTranslate(srcProps.Get(name), langTag)
 		dstProps.Put(name, translated)
 	}
 	dstProps.Store(dstFile, "Translated Properties")
