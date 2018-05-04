@@ -1,6 +1,8 @@
 # jproperties-translate
 A tool to translate java properties file
 
+[![Build Status](https://travis-ci.org/artificerpi/jproperties-translate.svg?branch=master)](https://travis-ci.org/artificerpi/jproperties-translate)
+
 ## Usage
 ``` go
 Usage of jproperties-translate:
