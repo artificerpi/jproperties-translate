@@ -72,7 +72,7 @@ func listPropFiles(dir string) []string {
 func main() {
 	flag.StringVar(&srcFile, "s", "source.properties", "specify the source properties file you want to translate")
 	flag.StringVar(&dstFile, "t", srcFile, "specify the target properties file to save")
-	flag.StringVar(&lang, "lang", "zh-CN", "specify the language you want")
+	flag.StringVar(&lang, "lang", "zh-CN", "specify the language wanted")
 	flag.StringVar(&dirPath, "dir", "", "specify the dir store properties files to be translated")
 	flag.Parse()
 

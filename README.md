@@ -7,7 +7,7 @@ A tool to translate java properties file
 ``` go
 Usage of jproperties-translate:
   -lang string
-        specify the language you want (default "zh-CN")
+        specify the language wanted (default "zh-CN")
   -s string
         specify the source properties file you want to translate (default "source.properties")
   -t string
