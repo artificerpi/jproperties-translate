@@ -92,10 +92,8 @@ func main() {
 	for _, name := range srcProps.Keys() {
 		message := srcProps.Get(name)
 		text, args := jproperties.Escape(message)
-		log.Println(string(args))
 		translatedText := gotranslate.QuickTranslate(text, langTag)
 		translatedMessage := jproperties.Format(translatedText, args)
-		log.Println(message ,translatedMessage)
 		dstProps.Put(name, translatedMessage)
 	}
 	dstProps.Store(dstFile, "Translated Properties")
